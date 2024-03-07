@@ -20,6 +20,7 @@ public class AlgoUtils
         {
             message += MyStrings[i] + " ";
         }
+
         return message;
     }
 
@@ -43,7 +44,7 @@ public class AlgoUtils
         aran = aran % 256;
         return Convert.ToChar(aran);
     }
-    
+
     public int ModInverse(int a, int m)
     {
         a = a % m;
@@ -52,9 +53,10 @@ public class AlgoUtils
             if ((a * x) % m == 1)
                 return x;
         }
-        return 1; 
+
+        return 1;
     }
-    
+
     public int GreatestCommonDivisor(int a, int b)
     {
         while (b != 0)
@@ -63,16 +65,63 @@ public class AlgoUtils
             b = a % b;
             a = temp;
         }
+
         return a;
     }
-    
+
     public int FindRelativePrimeTo256(int number)
     {
         while (GreatestCommonDivisor(number, 256) != 1)
         {
             number--;
         }
+
         return number;
     }
-}
 
+//after this, find an algo that can obfuscate the randomizer and add that layer of obfuscation
+//This will permit me to separate my strings with longer strings of text. Only the correct initial letters are to be parsed using the right randomizer. every 5 letters, use the randomizer. if i%5!=0, randomizer+i for the decryptions
+    public string CryptWord(string inputWord, int randomizer)
+    {
+        if (inputWord==null)
+        {
+            throw new Exception("Steph Charray will be null");
+        }
+        string tmp = inputWord;
+        char[] stephChArray = new char[tmp.Length];
+
+        for (int i = 0; i < tmp.Length; i++)
+        {
+            stephChArray[i] = this.CryptedChar(tmp[i], randomizer);
+        }
+
+        tmp = "";
+        for (int i = 0; i < stephChArray.Length; i++)
+        {
+            tmp += stephChArray[i];
+        }
+        return tmp;
+    }
+    
+    public string DeCryptWord(string inputWord, int randomizer)
+    {
+        if (inputWord==null)
+        {
+            throw new Exception("Steph Charray will be null");
+        }
+        string tmp = inputWord;
+        char[] stephChArray = new char[tmp.Length];
+
+        for (int i = 0; i < tmp.Length; i++)
+        {
+            stephChArray[i] = this.DecryptedChar(tmp[i], randomizer);
+        }
+
+        tmp = "";
+        for (int i = 0; i < stephChArray.Length; i++)
+        {
+            tmp += stephChArray[i];
+        }
+        return tmp;
+    }
+}

@@ -29,7 +29,6 @@ public class Message : IMessage
     public void EncryptMessage()
     {
         var randNum = 0;
-        var tmpInput = InputMessage;
         var totalLength = 0;
         int randomizer = 0;
         foreach (var word in ObfuscatingWords)
@@ -46,6 +45,9 @@ public class Message : IMessage
         var c1 = a.CryptedChar('N', r1);
         Console.WriteLine(c1);
         Console.WriteLine(a.DecryptedChar(c1, r1));
+
+        Console.WriteLine(a.CryptWord("Hola", r1));
+        Console.WriteLine(a.DeCryptWord("Hola", r1));
     }
 
 }
