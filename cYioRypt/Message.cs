@@ -1,48 +1,74 @@
 using System.Text.Json;
 
 namespace cYioRypt;
+
 public class Message : IMessage
 {
-    private AlgoUtils a = new AlgoUtils();  
+    private readonly AlgoUtils _a = new AlgoUtils();
     public int Seed { get; set; }
 
-    protected int Randomizer;
-    
+    private readonly int _randomizer;
+
     public string InputMessage { get; set; }
 
     public string[] ObfuscatingWords { get; set; }
 
-    public string? CryptedMessage;
+    public string CryptedMessage;
     protected int WordCount = 0;
     private protected char RandomChar = 'A';
 
-    public Message( int seed, params string[] words)
+    public Message(int seed, params string[] words)
     {
         InputMessage = "";
         this.Seed = seed;
-        
-        
+
+
         foreach (string word in words)
         {
-            InputMessage += word.ToUpper()[0]+word.Substring(1,word.Length-1); //ensure camelCase
+            InputMessage += word.ToUpper()[0] + word.Substring(1, word.Length - 1); //ensure camelCase
             WordCount++;
         }
-        ObfuscatingWords = new[] { "Bob", "Yarle", "Stroba", "Jaury", "Lorias", "Teseko", "November", "Zeventytwelve"};
-        this.Randomizer = R1();
+
+        // ObfuscatingWords = new[] { "Bob", "Yarle", "Stroba", "Jaury", "Lorias", "Teseko", "November", "Zeventytwelve", "Marco","Jennerliras", "The"};
+        ObfuscatingWords = new[]
+        {
+            "le", "the", "de", "be", "un", "to", "à", "of", "être", "and",
+            "et", "a", "en", "in", "avoir", "that", "que", "have", "pour", "I",
+            "dans", "it", "ce", "for", "il", "not", "qui", "on", "ne", "with",
+            "sur", "do", "se", "at", "pas", "this", "plus", "but", "pouvoir", "his",
+            "par", "by", "je", "from", "avec", "they", "we", "say", "nous", "her",
+            "comme", "she", "or", "ou", "an", "si", "will", "leur", "my", "lui",
+            "one", "devoir", "all", "sans", "would", "mon", "what", "dire", "so",
+            "vous", "up", "fois", "out", "même", "if", "y", "about", "pendant",
+            "who", "encore", "get", "elle", "dont", "make", "où", "can", "when",
+            "après", "like", "aussi", "you", "tout", "time", "faire", "no", "but",
+            "just", "pas", "him", "know", "sur", "take", "their", "people", "do",
+            "into", "year", "your", "good", "its", "some", "over", "could", "think",
+            "them", "also", "see", "back", "other", "than", "after", "then", "use",
+            "now", "two", "look", "how", "only", "our", "come", "work", "its", "first",
+            "well", "way", "even", "grand", "allons", "trouver", "l'autre", "temps", "bien",
+            "aussi", "jamais", "entre", "peu", "vouloir", "cette", "ainsi", "heure", "quelque",
+            "deux", "chose", "année", "avant", "après", "ça", "donner", "premier", "partir",
+            "voir", "dernier", "tant", "grâce", "jour", "moins", "venir", "prendre", "suite",
+            "monde", "puis", "rien", "abord", "passer", "trois", "nouveau", "tous", "suite"
+        }; //this is why ai is good
+        this._randomizer = R1();
+        EncryptMessage();
     }
-    
-    
-    public void EncryptMessage()
+
+
+    private void EncryptMessage()
     {
-        
         // var r1 = Randomizer;
         // Console.WriteLine(randNum);
         // RandomChar = Convert.ToChar( randNum);
         // var ran = a.Randomized(InputMessage, randNum, RandomChar);
-        
-        Console.WriteLine(a.CryptWord("Hola", Randomizer));
-        Console.WriteLine(a.DeCryptWord(a.CryptWord("Hola", Randomizer), Randomizer));
+        CryptedMessage = _a.CryptWord(InputMessage, _randomizer);
+        //Console.WriteLine(a.CryptWord("Hola", Randomizer));
+        //Console.WriteLine(a.DeCryptWord(a.CryptWord("Hola", Randomizer), Randomizer));
+        InputMessage = "";
     }
+
 
     private int R1()
     {
@@ -50,17 +76,35 @@ public class Message : IMessage
         var totalLength = 0;
         int randomizer = 0;
         foreach (var word in ObfuscatingWords)
-        { 
-            totalLength += word.Length; //even with the same seed, if the users are not on the same server with the same obfuscating words, they cannot decrpyt the message.
+        {
+            totalLength +=
+                word.Length; //even with the same seed, if the users are not on the same server with the same obfuscating words, they cannot decrpyt the message.
         }
+
         randomizer = totalLength * (Seed);
-        r1 = a.FindRelativePrimeTo256(randomizer);
+        r1 = _a.FindRelativePrimeTo256(randomizer);
         return r1;
     }
 
-    public void DecryptMessage()
+    public string DecryptMessage(int randoKey)
     {
-        
+        Console.WriteLine(_randomizer);
+        string decryptedMessage = "";
+        decryptedMessage = _a.DeCryptWord(CryptedMessage, _randomizer);
+
+
+        return decryptedMessage;
     }
 
+    public void RandomizerObfuscator(int obfuscatorSetting)
+    {
+        if (obfuscatorSetting > 99)
+        {
+            throw new ArgumentOutOfRangeException("obfuscatorSetting", " needs to be two digits long");
+        }
+        
+        
+        
+        string[] tmpWords = new string[10];
+    }
 }

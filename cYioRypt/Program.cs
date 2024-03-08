@@ -3,6 +3,7 @@
 using cYioRypt;
 
 //Make sure seed is under 10^8
-Message mess1 = new Message(43411, "Bon", "Job");
+Message mess1 = new Message(8131241, "The","cat","is","out","of","the","hat");
 Console.WriteLine(mess1.InputMessage);
-mess1.EncryptMessage();
+Console.WriteLine(mess1.CryptedMessage);
+Console.WriteLine(mess1.DecryptMessage(1));
