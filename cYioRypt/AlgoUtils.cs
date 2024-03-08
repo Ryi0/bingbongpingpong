@@ -120,7 +120,7 @@ public class AlgoUtils
         tmp = "";
         for (int i = 0; i < stephChArray.Count; i++)
         {
-            Console.WriteLine(this.DecryptedChar(stephChArray[i], randomizer));
+           // Console.WriteLine(this.DecryptedChar(stephChArray[i], randomizer));
             tmp += this.DecryptedChar(stephChArray[i], randomizer);
         }
         
