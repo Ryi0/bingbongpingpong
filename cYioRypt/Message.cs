@@ -3,17 +3,8 @@ using System.Text.Json;
 namespace cYioRypt;
 public class Message : IMessage
 {
-    private AlgoUtils a = new AlgoUtils();
-
-    public int Seed
-    {
-        get { return _seed; }
-        set
-        {
-            
-            _seed = value;
-        }
-    }
+    private AlgoUtils a = new AlgoUtils();  
+    public int Seed { get; set; }
 
     protected int Randomizer;
     
@@ -24,31 +15,33 @@ public class Message : IMessage
     public string? CryptedMessage;
     protected int WordCount = 0;
     private protected char RandomChar = 'A';
-    private int _seed;
 
     public Message( int seed, params string[] words)
     {
         InputMessage = "";
         this.Seed = seed;
+        
+        
         foreach (string word in words)
         {
             InputMessage += word.ToUpper()[0]+word.Substring(1,word.Length-1); //ensure camelCase
             WordCount++;
         }
         ObfuscatingWords = new[] { "Bob", "Yarle", "Stroba", "Jaury", "Lorias", "Teseko", "November", "Zeventytwelve"};
+        this.Randomizer = R1();
     }
     
     
     public void EncryptMessage()
     {
-        var r1 = R1();
         
+        // var r1 = Randomizer;
         // Console.WriteLine(randNum);
         // RandomChar = Convert.ToChar( randNum);
         // var ran = a.Randomized(InputMessage, randNum, RandomChar);
         
-        Console.WriteLine(a.CryptWord("Hola", r1));
-        Console.WriteLine(a.DeCryptWord(a.CryptWord("Hola", r1), r1));
+        Console.WriteLine(a.CryptWord("Hola", Randomizer));
+        Console.WriteLine(a.DeCryptWord(a.CryptWord("Hola", Randomizer), Randomizer));
     }
 
     private int R1()
