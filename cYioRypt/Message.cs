@@ -91,52 +91,56 @@ public class Message : IMessage
         // Console.WriteLine(_randomizer);
         string decryptedMessage = "";
         decryptedMessage = _a.DeCryptWord(CryptedMessage, _randomizer);
-        RandomizerObfuscator(11);
+        RandomizerObfuscator(11, 4);
 
         return decryptedMessage;
     }
 
-    public void RandomizerObfuscator(int obfuscatorSetting)
+    public void RandomizerObfuscator(int obfuscatorSetting, int steps)
     {
-        if (obfuscatorSetting > 99||obfuscatorSetting<9)
-        {
+        if (obfuscatorSetting > 99 || obfuscatorSetting < 9)
             throw new ArgumentOutOfRangeException("obfuscatorSetting", " needs to be two digits long");
-        }
 
-        List<string> wordsAsList = ObfuscatingWords.ToList(); 
+        var wordsAsList = ObfuscatingWords.ToList();
         string randomFromWords = "";
         Console.WriteLine(_randomizer);
-        string a = _randomizer.ToString();
-        int[] positions = new int[a.Length];
-        string[] tmpWords = new string[a.Length];
+        string randomizerAsAString = _randomizer.ToString();
+        int[] positions = new int[randomizerAsAString.Length];
+        if (positions.Length < steps)
+            throw new ArgumentOutOfRangeException("steps", " Is larger than the key lengt. Lower the step count");
+
+        string[] tmpWords = new string[randomizerAsAString.Length];
         Console.WriteLine(positions.Length);
-        var abc = "";
         for (int i = 0; i < positions.Length; i++)
         {
-            positions[i] = Convert.ToInt32(a[i].ToString());
-            Console.WriteLine("positions["+i+"] = "+positions[i]);
-            abc += positions[i];
-            Console.WriteLine(abc);
+            positions[i] = Convert.ToInt32(randomizerAsAString[i].ToString());
+            Console.WriteLine("positions[" + i + "] = " + positions[i]);
             tmpWords[i] = ObfuscatingWords[positions[i]];
         }
-        
-        
-        int tmpAccu = 0;
+
+        string[] tmpWordsArray = new string[randomizerAsAString.Length];
+        int accu = obfuscatorSetting;
+        int tmpIndex = 0;
+        while (accu > 0)
+        {
+            if (tmpIndex > tmpWordsArray.Length - 1)
+                tmpIndex -= tmpWordsArray.Length - 1;
+            else if (tmpIndex < 0)
+                tmpIndex = 0;
+
+            tmpWordsArray[tmpIndex] = wordsAsList[tmpIndex + obfuscatorSetting];
+            tmpIndex += steps;
+            accu--;
+        }
+
         foreach (string tmpWord in tmpWords)
         {
             randomFromWords += wordsAsList.IndexOf(tmpWord);
             Console.WriteLine(tmpWord);
             Console.WriteLine(randomFromWords);
-            tmpAccu++;
         }
-        
-        
-        
-        
-        // Console.WriteLine(a);
-        
-        
-        
-        
+
+        foreach (string word in tmpWordsArray)
+            Console.WriteLine(word);
     }
 }
