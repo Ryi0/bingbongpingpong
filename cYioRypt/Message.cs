@@ -45,9 +45,23 @@ public class Message : IMessage
         var c1 = a.CryptedChar('N', r1);
         Console.WriteLine(c1);
         Console.WriteLine(a.DecryptedChar(c1, r1));
-
+        
         Console.WriteLine(a.CryptWord("Hola", r1));
         Console.WriteLine(a.DeCryptWord("Hola", r1));
+        List<char> testCharArrayCrypted = new List<char>();
+        List<char> testCharArrayDecrypted = new List<char>();
+        
+        // for (int i = 0; i < "hola".Length; i++)
+        // {
+        //     Console.WriteLine(a.CryptedChar("Hola"[i], r1));
+        //     testCharArrayCrypted.Add(a.CryptedChar("Hola"[i], r1));
+        // }
+        //
+        // for (int i = 0; i < testCharArrayCrypted.Count; i++)
+        // {
+        //     Console.WriteLine(a.DecryptedChar(testCharArrayCrypted[i], r1));
+        // }
+                
     }
 
 }

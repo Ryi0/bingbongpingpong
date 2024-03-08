@@ -27,12 +27,12 @@ public class AlgoUtils
     public char CryptedChar(char inChar, int randomizer)
     {
         var aran = randomizer % 256;
-        Console.WriteLine(aran);
+        // Console.WriteLine(aran);
         aran *= (int)inChar;
         aran = aran % 256;
-        Console.WriteLine(aran);
+        // Console.WriteLine(aran);
         char randomChar = Convert.ToChar(aran);
-        Console.WriteLine(randomChar);
+        // Console.WriteLine(randomChar);
         return randomChar;
     }
 
@@ -110,18 +110,20 @@ public class AlgoUtils
             throw new Exception("Steph Charray will be null");
         }
         string tmp = inputWord;
-        char[] stephChArray = new char[tmp.Length];
+        List<char> stephChArray = new List<char>();
 
         for (int i = 0; i < tmp.Length; i++)
         {
-            stephChArray[i] = this.DecryptedChar(tmp[i], randomizer);
+            stephChArray.Add(tmp[i]);
         }
 
         tmp = "";
-        for (int i = 0; i < stephChArray.Length; i++)
+        for (int i = 0; i < stephChArray.Count; i++)
         {
-            tmp += stephChArray[i];
+            Console.WriteLine(this.DecryptedChar(stephChArray[i], randomizer));
+            tmp += this.DecryptedChar(stephChArray[i], randomizer);
         }
+        
         return tmp;
     }
-}
+} 
