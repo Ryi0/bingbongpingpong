@@ -88,23 +88,55 @@ public class Message : IMessage
 
     public string DecryptMessage(int randoKey)
     {
-        Console.WriteLine(_randomizer);
+        // Console.WriteLine(_randomizer);
         string decryptedMessage = "";
         decryptedMessage = _a.DeCryptWord(CryptedMessage, _randomizer);
-
+        RandomizerObfuscator(11);
 
         return decryptedMessage;
     }
 
     public void RandomizerObfuscator(int obfuscatorSetting)
     {
-        if (obfuscatorSetting > 99)
+        if (obfuscatorSetting > 99||obfuscatorSetting<9)
         {
             throw new ArgumentOutOfRangeException("obfuscatorSetting", " needs to be two digits long");
+        }
+
+        List<string> wordsAsList = ObfuscatingWords.ToList(); 
+        string randomFromWords = "";
+        Console.WriteLine(_randomizer);
+        string a = _randomizer.ToString();
+        int[] positions = new int[a.Length];
+        string[] tmpWords = new string[a.Length];
+        Console.WriteLine(positions.Length);
+        var abc = "";
+        for (int i = 0; i < positions.Length; i++)
+        {
+            positions[i] = Convert.ToInt32(a[i].ToString());
+            Console.WriteLine("positions["+i+"] = "+positions[i]);
+            abc += positions[i];
+            Console.WriteLine(abc);
+            tmpWords[i] = ObfuscatingWords[positions[i]];
+        }
+        
+        
+        int tmpAccu = 0;
+        foreach (string tmpWord in tmpWords)
+        {
+            randomFromWords += wordsAsList.IndexOf(tmpWord);
+            Console.WriteLine(tmpWord);
+            Console.WriteLine(randomFromWords);
+            tmpAccu++;
         }
         
         
         
-        string[] tmpWords = new string[10];
+        
+        // Console.WriteLine(a);
+        
+        
+        
+        
     }
 }
