@@ -8,15 +8,15 @@ public class Message : IMessage
     public int Seed { get; set; }
 
     private readonly int _randomizer;
-
+    public List<string> RandomizerAsWordsArray;
     public string InputMessage { get; set; }
 
-    public string[] ObfuscatingWords { get; set; }
+    public List<string> ObfuscatingWords { get; set; }
 
     public string CryptedMessage;
     protected int WordCount = 0;
     private protected char RandomChar = 'A';
-
+    
     public Message(int seed, params string[] words)
     {
         InputMessage = "";
@@ -30,28 +30,182 @@ public class Message : IMessage
         }
 
         // ObfuscatingWords = new[] { "Bob", "Yarle", "Stroba", "Jaury", "Lorias", "Teseko", "November", "Zeventytwelve", "Marco","Jennerliras", "The"};
-        ObfuscatingWords = new[]
-        {
-            "le", "the", "être", "be", "avoir", "to", "de", "of", "un", "and", "a",
-            "je", "in", "tu", "that", "il", "have", "elle", "I", "on", "it", "for",
-            "pas", "not", "aller", "on", "avec", "with", "ce", "he", "que", "as",
-            "vous", "you", "do", "faire", "at", "tout", "this", "pouvoir", "but",
-            "son", "his", "venir", "by", "leur", "from", "ou", "they", "dire", "we",
-            "en", "say", "ne", "her", "pour", "she", "se", "or", "plus", "an",
-            "sans", "will", "contre", "my", "si", "one", "après", "all", "rien",
-            "would", "où", "there", "vrai", "their", "devoir", "what", "par", "so",
-            "chez", "up", "sur", "out", "homme", "if", "nouveau", "about", "femme",
-            "who", "enfant", "get", "maintenant", "which", "autre", "go", "seulement",
-            "me", "laisser", "when", "falloir", "make", "vouloir", "can", "comme",
-            "like", "alors", "time", "voir", "no", "bon", "just", "mot", "him",
-            "prendre", "know", "devenir", "take", "jour", "people", "savoir", "into",
-            "donner", "year", "reste", "your", "toujours", "good", "vie", "some",
-            "chose", "could", "même", "them", "aucun", "see", "deux", "other", "entre",
-            "than", "seul", "then", "fin", "now", "temps", "look", "avant", "only",
-            "encore", "come", "ainsi", "its", "grand", "over", "petit", "think",
-            "aussi", "back", "après", "use", "deux", "how", "dernier", "our",
-            "certain", "work", "first", "well", "way", "even", "new", "want",
-            "because", "any", "these", "give", "day", "most", "us"
+        ObfuscatingWords = new List<string>()
+        { "le", "the", "être", "be",
+            "avoir",
+            "to",
+            "de",
+            "of",
+            "un",
+            "and",
+            "a",
+            "je",
+            "in",
+            "tu",
+            "that",
+            "il",
+            "have",
+            "elle",
+            "I",
+            "on",
+            "it",
+            "for",
+            "pas",
+            "not",
+            "aller",
+            "on",
+            "avec",
+            "with",
+            "ce",
+            "he",
+            "que",
+            "as",
+            "vous",
+            "you",
+            "do",
+            "faire",
+            "at",
+            "tout",
+            "this",
+            "pouvoir",
+            "but",
+            "son",
+            "his",
+            "venir",
+            "by",
+            "leur",
+            "from",
+            "ou",
+            "they",
+            "dire",
+            "we",
+            "en",
+            "say",
+            "ne",
+            "her",
+            "pour",
+            "she",
+            "se",
+            "or",
+            "plus",
+            "an",
+            "sans",
+            "will",
+            "contre",
+            "my",
+            "si",
+            "one",
+            "après",
+            "all",
+            "rien",
+            "would",
+            "où",
+            "there",
+            "vrai",
+            "their",
+            "devoir",
+            "what",
+            "par",
+            "so",
+            "chez",
+            "up",
+            "sur",
+            "out",
+            "homme",
+            "if",
+            "nouveau",
+            "about",
+            "femme",
+            "who",
+            "enfant",
+            "get",
+            "maintenant",
+            "which",
+            "autre",
+            "go",
+            "seulement",
+            "me",
+            "laisser",
+            "when",
+            "falloir",
+            "make",
+            "vouloir",
+            "can",
+            "comme",
+            "like",
+            "alors",
+            "time",
+            "voir",
+            "no",
+            "bon",
+            "just",
+            "mot",
+            "him",
+            "prendre",
+            "know",
+            "devenir",
+            "take",
+            "jour",
+            "people",
+            "savoir",
+            "into",
+            "donner",
+            "year",
+            "reste",
+            "your",
+            "toujours",
+            "good",
+            "vie",
+            "some",
+            "chose",
+            "could",
+            "même",
+            "them",
+            "aucun",
+            "see",
+            "deux",
+            "other",
+            "entre",
+            "than",
+            "seul",
+            "then",
+            "fin",
+            "now",
+            "temps",
+            "look",
+            "avant",
+            "only",
+            "encore",
+            "come",
+            "ainsi",
+            "its",
+            "grand",
+            "over",
+            "petit",
+            "think",
+            "aussi",
+            "back",
+            "après",
+            "use",
+            "deux",
+            "how",
+            "dernier",
+            "our",
+            "certain",
+            "work",
+            "first",
+            "well",
+            "way",
+            "even",
+            "new",
+            "want",
+            "because",
+            "any",
+            "these",
+            "give",
+            "day",
+            "most",
+            "us"
         }; //this is why ai is good
         this._randomizer = R1();
         EncryptMessage();
@@ -120,6 +274,7 @@ public class Message : IMessage
         }
         return tmp;
     }
+    
     public void RandomizerObfuscator(int obfuscatorSetting, int steps)
     {
         if (obfuscatorSetting > 99||obfuscatorSetting<9)
@@ -144,18 +299,20 @@ public class Message : IMessage
             throw new ArgumentOutOfRangeException("steps", "is bigger than 10. Lower it");
         }
         string[] tmpWords = new string[randomizerAsAString.Length];
+        string[] tmpWordsArray = new string[randomizerAsAString.Length];
         for (int i = 0; i < positions.Length; i++)
         {
             positions[i] = Convert.ToInt32(randomizerAsAString[i].ToString());
             tmpWords[i] = ObfuscatingWords[positions[i]];
+            
         }
         
-        string[] tmpWordsArray = new string[randomizerAsAString.Length];
+        
         
         //equaly quality vs equal equality dun dun dunnnnnn
         for (int i = 0; i < tmpWordsArray.Length; i++)
         {
-            tmpWordsArray[i] = wordsAsList[i*steps + obfuscatorSetting];
+            tmpWordsArray[i] = wordsAsList[positions[i]*steps + obfuscatorSetting];
             obfPositions[i] = wordsAsList.LastIndexOf(tmpWordsArray[i]);
         }
         
@@ -176,5 +333,59 @@ public class Message : IMessage
         Console.WriteLine($"tmpWords: {string.Join(", ", tmpWords)}");
         Console.WriteLine($"tmpWordsArray: {string.Join(", ", tmpWordsArray)}");
         Console.WriteLine($"randomFromRandomWord: {string.Join(",  ",randomFromRandomWords)}" );
+
+        RandomizerAsWordsArray = tmpWordsArray.ToList();
+
+        GetRealPositionsArray(obfuscatorSetting, steps);
+
     }
+
+    private int[] GetPositionsArray(IEnumerable<string> words)
+    {
+        var tmpWords = words.ToList();
+        int[] tmp = new int[tmpWords.Count];
+        int index = 0;
+        foreach (string word in tmpWords)
+        { 
+            tmp[index] = ObfuscatingWords.LastIndexOf(word);
+            index++;
+        }
+        return tmp;
+    }
+
+    private int[] GetRealPositionsArray(int obfuscatorSetting, int steps)
+    {
+        string original = "";
+        string obfuscatedString = "";
+        string realOg = "";
+        int[] tmp = GetPositionsArray(RandomizerAsWordsArray);
+        var tmpIndex = 0;
+        for (int i = 0; i < tmp.Length; i++)
+        {
+            tmpIndex = tmp[i];
+            obfuscatedString += tmpIndex + ", ";
+            tmpIndex =  tmpIndex-(obfuscatorSetting-steps); 
+            original += tmpIndex + ", ";
+            
+           
+           // tmp[i]= tmpIndex;
+        }
+
+        Console.WriteLine($"ObfuscatedSting = {obfuscatedString}");
+        Console.WriteLine($"originalTry = {original}");
+        Console.WriteLine($"Real original = {_randomizer}");
+        
+        for (int i = 0; i < tmp.Length; i++)
+        {
+            
+        }
+        
+        return tmp;
+    }
+    public void GetNonObfWords()
+    {
+        
+    }
+    
+    
 }
