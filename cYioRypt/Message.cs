@@ -9,6 +9,7 @@ public class Message : IMessage
 
     private readonly int _randomizer;
     public List<string> RandomizerAsWordsArray;
+    public List<string> ObfuscatedRandomizerAsWordsArray;
     public string InputMessage { get; set; }
 
     public List<string> ObfuscatingWords { get; set; }
@@ -17,7 +18,15 @@ public class Message : IMessage
     protected int WordCount = 0;
     private protected char RandomChar = 'A';
     
-    public Message(int seed, params string[] words)
+    
+    /// <summary>
+    /// /*TODO"{Need to make settings optional and default them to the first and last number of the seed}*/
+    /// </summary>
+    /// <param name="seed"></param>
+    /// <param name="obfuscatorSettings"></param>
+    /// <param name="steps"></param>
+    /// <param name="words"></param>
+    public Message(int seed, int obfuscatorSettings, int steps, params string[] words)
     {
         InputMessage = "";
         this.Seed = seed;
@@ -208,16 +217,20 @@ public class Message : IMessage
             "us"
         }; //this is why ai is good
         this._randomizer = R1();
-        EncryptMessage();
+        EncryptMessage(obfuscatorSettings, steps);
     }
 
-
-    private void EncryptMessage()
+    /// <summary>
+    /// This encrypts a message and sets up the obfuscatedWords array
+    /// </summary>
+    private void EncryptMessage(int obfuscatorSettings, int steps)
     {
+        
         // var r1 = Randomizer;
         // Console.WriteLine(randNum);
         // RandomChar = Convert.ToChar( randNum);
         // var ran = a.Randomized(InputMessage, randNum, RandomChar);
+        RandomizerObfuscator(obfuscatorSettings, steps);
         CryptedMessage = _a.CryptWord(InputMessage, _randomizer);
         //Console.WriteLine(a.CryptWord("Hola", Randomizer));
         //Console.WriteLine(a.DeCryptWord(a.CryptWord("Hola", Randomizer), Randomizer));
@@ -240,13 +253,17 @@ public class Message : IMessage
         r1 = _a.FindRelativePrimeTo256(randomizer);
         return r1;
     }
-
-    public string DecryptMessage(int randoKey)
+/// <summary>
+/// This decrypts a message using the obfuscator settings
+/// </summary>
+/// <param name="obfuscatorSettings"></param>
+/// <param name="steps"></param>
+/// <returns></returns>
+    public string DecryptMessage(int obfuscatorSettings, int steps, string[] wordsArray)
     {
         // Console.WriteLine(_randomizer);
         string decryptedMessage = "";
-        decryptedMessage = _a.DeCryptWord(CryptedMessage, _randomizer);
-        RandomizerObfuscator(71, 3);
+        decryptedMessage = _a.DeCryptWord(CryptedMessage, PositionsArrayToRandomizer(GetRealPositionsArray(obfuscatorSettings, steps, wordsArray)));
 
         return decryptedMessage;
     }
@@ -261,51 +278,47 @@ public class Message : IMessage
     /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void RandomizerObfuscator(int obfuscatorSetting, int steps)
     {
+        if (steps>10)
+        {
+            throw new ArgumentOutOfRangeException("steps", "steps is bigger than 10. Lower it");
+        }
         if (obfuscatorSetting > 99||obfuscatorSetting<9)
         {
             throw new ArgumentOutOfRangeException("obfuscatorSetting", "obfuscatorSetting needs to be two digits long");
         }
-        
-        List<string> wordsAsList = ObfuscatingWords.ToList(); 
         string randomizerAsAString = _randomizer.ToString();
-        
-        int[] positions = new int[randomizerAsAString.Length];
-        int[] obfPositions = new int[positions.Length];
+        int[] positions = KeyToPosArray(_randomizer);
         if (positions.Length<steps)
         {
             throw new ArgumentOutOfRangeException("steps", "steps Is larger than the key lengt. Lower the step count");
         }
 
-        if (steps>10)
-        {
-            throw new ArgumentOutOfRangeException("steps", "steps is bigger than 10. Lower it");
-        }
-        string[] tmpWords = new string[randomizerAsAString.Length];
         string[] tmpWordsArray = new string[randomizerAsAString.Length];
-        for (int i = 0; i < positions.Length; i++)
-        {
-            positions[i] = Convert.ToInt32(randomizerAsAString[i].ToString());
-            tmpWords[i] = ObfuscatingWords[positions[i]];
-        }
-        
-        
         
         //equaly quality vs equal equality dun dun dunnnnnn
         for (int i = 0; i < tmpWordsArray.Length; i++)
         {
-            tmpWordsArray[i] = wordsAsList[positions[i]*steps + obfuscatorSetting];
-            obfPositions[i] = wordsAsList.LastIndexOf(tmpWordsArray[i]);
+            tmpWordsArray[i] = ObfuscatingWords[positions[i]*steps + obfuscatorSetting];
+        }
+        ObfuscatedRandomizerAsWordsArray = tmpWordsArray.ToList();
+        
+    }
+    
+    /// <summary>
+    /// This turns a key into an array[int] of positions 
+    /// </summary>
+    /// <returns></returns>
+    private int[] KeyToPosArray(int key)
+    {
+        string randoAsString = key.ToString();
+        int[] posArray = new int[randoAsString.Length];
+        
+        for (int i = 0; i < posArray.Length; i++)
+        {
+            posArray[i] = Convert.ToInt32(randoAsString[i].ToString());
         }
         
-        
-        // Console.WriteLine(a);
-
-        RandomizerAsWordsArray = tmpWordsArray.ToList();
-        
-        Console.WriteLine("Word array from RandomizerAsWordsArray : ");
-        GetWordsArray(GetPositionsArray(RandomizerAsWordsArray));
-        Console.WriteLine("Word array from real pos  : ");
-        GetWordsArray(GetRealPositionsArray(obfuscatorSetting, steps, RandomizerAsWordsArray));
+        return posArray;
     }
     
     /// <summary>
@@ -368,10 +381,23 @@ public class Message : IMessage
         {
             words = words.Append(ObfuscatingWords[pos]).ToArray();
         }
-
-        Console.WriteLine(string.Join(", ", words));
+        
         return words;
     }
-    
+
+    private int PositionsArrayToRandomizer(int[] positionsArray)
+    {
+        int randomizer = 0;
+        string tmpBuffer = "";
+        foreach (int position in positionsArray)
+        {
+            tmpBuffer += position;
+        }
+
+        Console.WriteLine(tmpBuffer);
+        randomizer = Convert.ToInt32(tmpBuffer);
+        
+        return randomizer;
+    }
     
 }
