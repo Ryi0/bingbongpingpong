@@ -364,22 +364,19 @@ public class Message : IMessage
         {
             tmpIndex = tmp[i];
             obfuscatedString += tmpIndex + ", ";
-            tmpIndex =  tmpIndex-(obfuscatorSetting-steps); 
-            original += tmpIndex + ", ";
-            
+           // tmpIndex =  steps+ (obfuscatorSetting - tmpIndex); 
            
-           // tmp[i]= tmpIndex;
+            realOg += ObfuscatingWords[(tmpIndex - obfuscatorSetting)/steps  ]+", ";
+            tmpIndex = (tmpIndex - obfuscatorSetting) / steps;
+            original += tmpIndex + ", ";
+            // tmp[i]= tmpIndex;
         }
 
         Console.WriteLine($"ObfuscatedSting = {obfuscatedString}");
         Console.WriteLine($"originalTry = {original}");
         Console.WriteLine($"Real original = {_randomizer}");
-        
-        for (int i = 0; i < tmp.Length; i++)
-        {
-            
-        }
-        
+        Console.WriteLine($"RealOG = {realOg}");        
+
         return tmp;
     }
     public void GetNonObfWords()
