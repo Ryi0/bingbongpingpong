@@ -337,7 +337,12 @@ public class Message : IMessage
         RandomizerAsWordsArray = tmpWordsArray.ToList();
 
         GetRealPositionsArray(obfuscatorSetting, steps);
-
+        Console.WriteLine("\n\nthis the cool shit");
+        Console.WriteLine("Word array from RandomizerAsWordsArray : ");
+        GetWordsArray(GetPositionsArray(RandomizerAsWordsArray));
+        Console.WriteLine("Word array from real pos  : ");
+        GetWordsArray(GetRealPositionsArray(obfuscatorSetting, steps));
+        Console.WriteLine("\n\n");
     }
 
     private int[] GetPositionsArray(IEnumerable<string> words)
@@ -369,19 +374,29 @@ public class Message : IMessage
             realOg += ObfuscatingWords[(tmpIndex - obfuscatorSetting)/steps  ]+", ";
             tmpIndex = (tmpIndex - obfuscatorSetting) / steps;
             original += tmpIndex + ", ";
-            // tmp[i]= tmpIndex;
+            tmp[i]= tmpIndex;
         }
 
-        Console.WriteLine($"ObfuscatedSting = {obfuscatedString}");
-        Console.WriteLine($"originalTry = {original}");
-        Console.WriteLine($"Real original = {_randomizer}");
-        Console.WriteLine($"RealOG = {realOg}");        
-
+        // Console.WriteLine($"ObfuscatedSting = {obfuscatedString}");
+        // Console.WriteLine($"originalTry = {original}");
+        // Console.WriteLine($"Real original = {_randomizer}");
+        // Console.WriteLine($"RealOG = {realOg}");        
+        
+        
         return tmp;
     }
-    public void GetNonObfWords()
+    public IEnumerable<string> GetWordsArray(int[] posArray)
     {
-        
+        string[] words = new string[0];
+        int i = 0;
+        foreach (int pos in posArray)
+        {
+            words = words.Append(ObfuscatingWords[pos]).ToArray();
+
+        }
+
+        Console.WriteLine(string.Join(", ", words));
+        return words;
     }
     
     
