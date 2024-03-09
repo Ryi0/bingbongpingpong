@@ -32,25 +32,26 @@ public class Message : IMessage
         // ObfuscatingWords = new[] { "Bob", "Yarle", "Stroba", "Jaury", "Lorias", "Teseko", "November", "Zeventytwelve", "Marco","Jennerliras", "The"};
         ObfuscatingWords = new[]
         {
-            "le", "the", "de", "be", "un", "to", "à", "of", "être", "and",
-            "et", "a", "en", "in", "avoir", "that", "que", "have", "pour", "I",
-            "dans", "it", "ce", "for", "il", "not", "qui", "on", "ne", "with",
-            "sur", "do", "se", "at", "pas", "this", "plus", "but", "pouvoir", "his",
-            "par", "by", "je", "from", "avec", "they", "we", "say", "nous", "her",
-            "comme", "she", "or", "ou", "an", "si", "will", "leur", "my", "lui",
-            "one", "devoir", "all", "sans", "would", "mon", "what", "dire", "so",
-            "vous", "up", "fois", "out", "même", "if", "y", "about", "pendant",
-            "who", "encore", "get", "elle", "dont", "make", "où", "can", "when",
-            "après", "like", "aussi", "you", "tout", "time", "faire", "no", "but",
-            "just", "pas", "him", "know", "sur", "take", "their", "people", "do",
-            "into", "year", "your", "good", "its", "some", "over", "could", "think",
-            "them", "also", "see", "back", "other", "than", "after", "then", "use",
-            "now", "two", "look", "how", "only", "our", "come", "work", "its", "first",
-            "well", "way", "even", "grand", "allons", "trouver", "l'autre", "temps", "bien",
-            "aussi", "jamais", "entre", "peu", "vouloir", "cette", "ainsi", "heure", "quelque",
-            "deux", "chose", "année", "avant", "après", "ça", "donner", "premier", "partir",
-            "voir", "dernier", "tant", "grâce", "jour", "moins", "venir", "prendre", "suite",
-            "monde", "puis", "rien", "abord", "passer", "trois", "nouveau", "tous", "suite"
+            "le", "the", "être", "be", "avoir", "to", "de", "of", "un", "and", "a",
+            "je", "in", "tu", "that", "il", "have", "elle", "I", "on", "it", "for",
+            "pas", "not", "aller", "on", "avec", "with", "ce", "he", "que", "as",
+            "vous", "you", "do", "faire", "at", "tout", "this", "pouvoir", "but",
+            "son", "his", "venir", "by", "leur", "from", "ou", "they", "dire", "we",
+            "en", "say", "ne", "her", "pour", "she", "se", "or", "plus", "an",
+            "sans", "will", "contre", "my", "si", "one", "après", "all", "rien",
+            "would", "où", "there", "vrai", "their", "devoir", "what", "par", "so",
+            "chez", "up", "sur", "out", "homme", "if", "nouveau", "about", "femme",
+            "who", "enfant", "get", "maintenant", "which", "autre", "go", "seulement",
+            "me", "laisser", "when", "falloir", "make", "vouloir", "can", "comme",
+            "like", "alors", "time", "voir", "no", "bon", "just", "mot", "him",
+            "prendre", "know", "devenir", "take", "jour", "people", "savoir", "into",
+            "donner", "year", "reste", "your", "toujours", "good", "vie", "some",
+            "chose", "could", "même", "them", "aucun", "see", "deux", "other", "entre",
+            "than", "seul", "then", "fin", "now", "temps", "look", "avant", "only",
+            "encore", "come", "ainsi", "its", "grand", "over", "petit", "think",
+            "aussi", "back", "après", "use", "deux", "how", "dernier", "our",
+            "certain", "work", "first", "well", "way", "even", "new", "want",
+            "because", "any", "these", "give", "day", "most", "us"
         }; //this is why ai is good
         this._randomizer = R1();
         EncryptMessage();
@@ -91,56 +92,89 @@ public class Message : IMessage
         // Console.WriteLine(_randomizer);
         string decryptedMessage = "";
         decryptedMessage = _a.DeCryptWord(CryptedMessage, _randomizer);
-        RandomizerObfuscator(11, 4);
+        RandomizerObfuscator(71, 3);
 
         return decryptedMessage;
     }
 
+    /**
+     * if the array contains an empty string, the final count will be positive (>0).
+     * Then, it returns true
+     * 
+     */
+    private bool ContainsEmptyWord(string[] words)
+    {
+        bool tmp = false;
+        int counteur = 0;
+        foreach (string word in words)
+        {
+            if (string.IsNullOrWhiteSpace(word)) 
+            {
+                counteur++;
+            }
+        }
+
+        if (counteur>0)
+        {
+            tmp = true;
+        }
+        return tmp;
+    }
     public void RandomizerObfuscator(int obfuscatorSetting, int steps)
     {
-        if (obfuscatorSetting > 99 || obfuscatorSetting < 9)
+        if (obfuscatorSetting > 99||obfuscatorSetting<9)
+        {
             throw new ArgumentOutOfRangeException("obfuscatorSetting", " needs to be two digits long");
+        }
 
-        var wordsAsList = ObfuscatingWords.ToList();
+        string randomFromRandomWords = "";
+        List<string> wordsAsList = ObfuscatingWords.ToList(); 
         string randomFromWords = "";
-        Console.WriteLine(_randomizer);
         string randomizerAsAString = _randomizer.ToString();
+        
         int[] positions = new int[randomizerAsAString.Length];
-        if (positions.Length < steps)
+        int[] obfPositions = new int[positions.Length];
+        if (positions.Length<steps)
+        {
             throw new ArgumentOutOfRangeException("steps", " Is larger than the key lengt. Lower the step count");
+        }
 
+        if (steps>10)
+        {
+            throw new ArgumentOutOfRangeException("steps", "is bigger than 10. Lower it");
+        }
         string[] tmpWords = new string[randomizerAsAString.Length];
-        Console.WriteLine(positions.Length);
         for (int i = 0; i < positions.Length; i++)
         {
             positions[i] = Convert.ToInt32(randomizerAsAString[i].ToString());
-            Console.WriteLine("positions[" + i + "] = " + positions[i]);
             tmpWords[i] = ObfuscatingWords[positions[i]];
         }
-
+        
         string[] tmpWordsArray = new string[randomizerAsAString.Length];
-        int accu = obfuscatorSetting;
-        int tmpIndex = 0;
-        while (accu > 0)
+        
+        //equaly quality vs equal equality dun dun dunnnnnn
+        for (int i = 0; i < tmpWordsArray.Length; i++)
         {
-            if (tmpIndex > tmpWordsArray.Length - 1)
-                tmpIndex -= tmpWordsArray.Length - 1;
-            else if (tmpIndex < 0)
-                tmpIndex = 0;
-
-            tmpWordsArray[tmpIndex] = wordsAsList[tmpIndex + obfuscatorSetting];
-            tmpIndex += steps;
-            accu--;
+            tmpWordsArray[i] = wordsAsList[i*steps + obfuscatorSetting];
+            obfPositions[i] = wordsAsList.LastIndexOf(tmpWordsArray[i]);
         }
-
-        foreach (string tmpWord in tmpWords)
+        
+        
+        foreach (string tmpWord in tmpWordsArray)
         {
-            randomFromWords += wordsAsList.IndexOf(tmpWord);
-            Console.WriteLine(tmpWord);
-            Console.WriteLine(randomFromWords);
+           // Console.WriteLine(wordsAsList.IndexOf(tmpWord)); 
+            randomFromRandomWords += wordsAsList.IndexOf(tmpWord);
         }
-
-        foreach (string word in tmpWordsArray)
-            Console.WriteLine(word);
+        
+        // Console.WriteLine(a);
+        Console.WriteLine($"obfuscatorSetting: {obfuscatorSetting}");
+        Console.WriteLine($"steps: {steps}");
+        Console.WriteLine($"randomFromWords: {randomFromWords}");
+        Console.WriteLine($"randomizerAsAString: {randomizerAsAString}");
+        Console.WriteLine($"positions: {string.Join(", ", positions)}");
+        Console.WriteLine($"obfPositions: {string.Join(", ", obfPositions)}");
+        Console.WriteLine($"tmpWords: {string.Join(", ", tmpWords)}");
+        Console.WriteLine($"tmpWordsArray: {string.Join(", ", tmpWordsArray)}");
+        Console.WriteLine($"randomFromRandomWord: {string.Join(",  ",randomFromRandomWords)}" );
     }
 }
