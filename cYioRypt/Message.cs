@@ -251,52 +251,34 @@ public class Message : IMessage
         return decryptedMessage;
     }
 
-    /**
-     * if the array contains an empty string, the final count will be positive (>0).
-     * Then, it returns true
-     * 
-     */
-    private bool ContainsEmptyWord(string[] words)
-    {
-        bool tmp = false;
-        int counteur = 0;
-        foreach (string word in words)
-        {
-            if (string.IsNullOrWhiteSpace(word)) 
-            {
-                counteur++;
-            }
-        }
 
-        if (counteur>0)
-        {
-            tmp = true;
-        }
-        return tmp;
-    }
-    
+    /// <summary>
+    /// This turns the randomizer associated to the message into an array of strings. Those strings are picked out
+    /// from the array of obfuscating words using the obfuscatorsetting and the steps
+    /// </summary>
+    /// <param name="obfuscatorSetting"></param>
+    /// <param name="steps"></param>
+    /// <exception cref="ArgumentOutOfRangeException"></exception>
     public void RandomizerObfuscator(int obfuscatorSetting, int steps)
     {
         if (obfuscatorSetting > 99||obfuscatorSetting<9)
         {
-            throw new ArgumentOutOfRangeException("obfuscatorSetting", " needs to be two digits long");
+            throw new ArgumentOutOfRangeException("obfuscatorSetting", "obfuscatorSetting needs to be two digits long");
         }
-
-        string randomFromRandomWords = "";
+        
         List<string> wordsAsList = ObfuscatingWords.ToList(); 
-        string randomFromWords = "";
         string randomizerAsAString = _randomizer.ToString();
         
         int[] positions = new int[randomizerAsAString.Length];
         int[] obfPositions = new int[positions.Length];
         if (positions.Length<steps)
         {
-            throw new ArgumentOutOfRangeException("steps", " Is larger than the key lengt. Lower the step count");
+            throw new ArgumentOutOfRangeException("steps", "steps Is larger than the key lengt. Lower the step count");
         }
 
         if (steps>10)
         {
-            throw new ArgumentOutOfRangeException("steps", "is bigger than 10. Lower it");
+            throw new ArgumentOutOfRangeException("steps", "steps is bigger than 10. Lower it");
         }
         string[] tmpWords = new string[randomizerAsAString.Length];
         string[] tmpWordsArray = new string[randomizerAsAString.Length];
@@ -304,7 +286,6 @@ public class Message : IMessage
         {
             positions[i] = Convert.ToInt32(randomizerAsAString[i].ToString());
             tmpWords[i] = ObfuscatingWords[positions[i]];
-            
         }
         
         
@@ -317,35 +298,23 @@ public class Message : IMessage
         }
         
         
-        foreach (string tmpWord in tmpWordsArray)
-        {
-           // Console.WriteLine(wordsAsList.IndexOf(tmpWord)); 
-            randomFromRandomWords += wordsAsList.IndexOf(tmpWord);
-        }
-        
         // Console.WriteLine(a);
-        Console.WriteLine($"obfuscatorSetting: {obfuscatorSetting}");
-        Console.WriteLine($"steps: {steps}");
-        Console.WriteLine($"randomFromWords: {randomFromWords}");
-        Console.WriteLine($"randomizerAsAString: {randomizerAsAString}");
-        Console.WriteLine($"positions: {string.Join(", ", positions)}");
-        Console.WriteLine($"obfPositions: {string.Join(", ", obfPositions)}");
-        Console.WriteLine($"tmpWords: {string.Join(", ", tmpWords)}");
-        Console.WriteLine($"tmpWordsArray: {string.Join(", ", tmpWordsArray)}");
-        Console.WriteLine($"randomFromRandomWord: {string.Join(",  ",randomFromRandomWords)}" );
 
         RandomizerAsWordsArray = tmpWordsArray.ToList();
-
-        GetRealPositionsArray(obfuscatorSetting, steps);
-        Console.WriteLine("\n\nthis the cool shit");
+        
         Console.WriteLine("Word array from RandomizerAsWordsArray : ");
         GetWordsArray(GetPositionsArray(RandomizerAsWordsArray));
         Console.WriteLine("Word array from real pos  : ");
-        GetWordsArray(GetRealPositionsArray(obfuscatorSetting, steps));
-        Console.WriteLine("\n\n");
+        GetWordsArray(GetRealPositionsArray(obfuscatorSetting, steps, RandomizerAsWordsArray));
     }
-
-    private int[] GetPositionsArray(IEnumerable<string> words)
+    
+    /// <summary>
+    /// this gives you an array of int that represents the positions of the given words inside
+    /// the array of obfuscating words 
+    /// </summary>
+    /// <param name="words"></param>
+    /// <returns></returns>
+    public int[] GetPositionsArray(IEnumerable<string> words)
     {
         var tmpWords = words.ToList();
         int[] tmp = new int[tmpWords.Count];
@@ -357,34 +326,40 @@ public class Message : IMessage
         }
         return tmp;
     }
-
-    private int[] GetRealPositionsArray(int obfuscatorSetting, int steps)
+    
+    /// <summary>
+    /// Using the obfuscator settings and the step count, you can reverse the random words to obtain
+    /// the positions of the words in the array of obfuscating words.
+    /// These positions can then be turned into the key require to decrypt the message.
+    /// I know this is dumb. I'm not exactly sure what's the problem with the logic i'm using but theres a major problem.
+    /// I was gonna say that the major problem with the approach is : Why have two methods that give you a position?
+    /// But I did it to save a bit of code in this method and because this method transforms a string using the obf settings.
+    /// My theory that would explain why I feel a tingle in the back of my head is that I could replace a lot of lines
+    /// of code with the method and I haven't done that yet.
+    /// </summary>
+    /// <param name="obfuscatorSetting"></param>
+    /// <param name="steps"></param>
+    /// <param name="words"></param>
+    /// <returns></returns>
+    public int[] GetRealPositionsArray(int obfuscatorSetting, int steps, IEnumerable<string> words)
     {
-        string original = "";
-        string obfuscatedString = "";
-        string realOg = "";
-        int[] tmp = GetPositionsArray(RandomizerAsWordsArray);
+
+        int[] tmp = GetPositionsArray(words);
         var tmpIndex = 0;
         for (int i = 0; i < tmp.Length; i++)
         {
             tmpIndex = tmp[i];
-            obfuscatedString += tmpIndex + ", ";
-           // tmpIndex =  steps+ (obfuscatorSetting - tmpIndex); 
-           
-            realOg += ObfuscatingWords[(tmpIndex - obfuscatorSetting)/steps  ]+", ";
             tmpIndex = (tmpIndex - obfuscatorSetting) / steps;
-            original += tmpIndex + ", ";
             tmp[i]= tmpIndex;
         }
-
-        // Console.WriteLine($"ObfuscatedSting = {obfuscatedString}");
-        // Console.WriteLine($"originalTry = {original}");
-        // Console.WriteLine($"Real original = {_randomizer}");
-        // Console.WriteLine($"RealOG = {realOg}");        
-        
-        
         return tmp;
     }
+    
+    /// <summary>
+    /// Obtain an array of string from an array of positions
+    /// </summary>
+    /// <param name="posArray"></param>
+    /// <returns></returns>
     public IEnumerable<string> GetWordsArray(int[] posArray)
     {
         string[] words = new string[0];
@@ -392,7 +367,6 @@ public class Message : IMessage
         foreach (int pos in posArray)
         {
             words = words.Append(ObfuscatingWords[pos]).ToArray();
-
         }
 
         Console.WriteLine(string.Join(", ", words));
