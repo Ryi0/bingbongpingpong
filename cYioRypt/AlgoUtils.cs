@@ -4,7 +4,7 @@ public class AlgoUtils
 {
     public static string[] MyStrings = Array.Empty<string>();
 
-    public string Randomized(string input, int randomizer, char randChar)
+    public string Randomized(string input, long randomizer, char randChar)
     {
         string message = "";
         var lenght = input.Length;
@@ -24,11 +24,11 @@ public class AlgoUtils
         return message;
     }
 
-    public char CryptedChar(char inChar, int randomizer)
+    public char CryptedChar(char inChar, long randomizer)
     {
         var aran = randomizer % 256;
         // Console.WriteLine(aran);
-        aran *= (int)inChar;
+        aran *= inChar;
         aran = aran % 256;
         // Console.WriteLine(aran);
         char randomChar = Convert.ToChar(aran);
@@ -36,7 +36,7 @@ public class AlgoUtils
         return randomChar;
     }
 
-    public char DecryptedChar(char randomChar, int randomizer)
+    public char DecryptedChar(char randomChar, long randomizer)
     {
         int aran = Convert.ToInt32(randomChar);
         int inverseMultiplier = ModInverse(randomizer, 256);
@@ -45,7 +45,7 @@ public class AlgoUtils
         return Convert.ToChar(aran);
     }
 
-    public int ModInverse(int a, int m)
+    public int ModInverse(long a, int m)
     {
         a = a % m;
         for (int x = 1; x < m; x++)
@@ -57,11 +57,11 @@ public class AlgoUtils
         return 1;
     }
 
-    public int GreatestCommonDivisor(int a, int b)
+    public long GreatestCommonDivisor(long a, long b)
     {
         while (b != 0)
         {
-            int temp = b;
+            long temp = b;
             b = a % b;
             a = temp;
         }
@@ -69,7 +69,7 @@ public class AlgoUtils
         return a;
     }
 
-    public int FindRelativePrimeTo256(int number)
+    public long FindRelativePrimeTo256(long number)
     {
         while (GreatestCommonDivisor(number, 256) != 1)
         {
@@ -81,7 +81,7 @@ public class AlgoUtils
 
 //after this, find an algo that can obfuscate the randomizer and add that layer of obfuscation
 //This will permit me to separate my strings with longer strings of text. Only the correct initial letters are to be parsed using the right randomizer. every 5 letters, use the randomizer. if i%5!=0, randomizer+i for the decryptions
-    public string CryptWord(string inputWord, int randomizer)
+    public string CryptWord(string inputWord, long randomizer)
     {
         if (inputWord==null)
         {
@@ -103,7 +103,7 @@ public class AlgoUtils
         return tmp;
     }
     
-    public string DeCryptWord(string inputWord, int randomizer)
+    public string DeCryptWord(string inputWord, long randomizer)
     {
         if (inputWord==null)
         {

@@ -7,7 +7,7 @@ public class Message : IMessage
     private readonly AlgoUtils _a = new AlgoUtils();
     public int Seed { get; set; }
 
-    private readonly int _randomizer;
+    private readonly long _randomizer;
     public List<string> RandomizerAsWordsArray;
     public List<string> ObfuscatedRandomizerAsWordsArray;
     public string InputMessage { get; set; }
@@ -238,11 +238,11 @@ public class Message : IMessage
     }
 
 
-    private int R1()
+    private long R1()
     {
-        int r1;
+        long r1;
         var totalLength = 0;
-        int randomizer = 0;
+        long randomizer = 0;
         foreach (var word in ObfuscatingWords)
         {
             totalLength +=
@@ -308,7 +308,7 @@ public class Message : IMessage
     /// This turns a key into an array[int] of positions 
     /// </summary>
     /// <returns></returns>
-    private int[] KeyToPosArray(int key)
+    private int[] KeyToPosArray(long key)
     {
         string randoAsString = key.ToString();
         int[] posArray = new int[randoAsString.Length];
@@ -385,9 +385,9 @@ public class Message : IMessage
         return words;
     }
 
-    private int PositionsArrayToRandomizer(int[] positionsArray)
+    private long PositionsArrayToRandomizer(int[] positionsArray)
     {
-        int randomizer = 0;
+        long randomizer = 0;
         string tmpBuffer = "";
         foreach (int position in positionsArray)
         {
@@ -395,7 +395,7 @@ public class Message : IMessage
         }
 
         Console.WriteLine(tmpBuffer);
-        randomizer = Convert.ToInt32(tmpBuffer);
+        randomizer = Convert.ToInt64(tmpBuffer);
         
         return randomizer;
     }
