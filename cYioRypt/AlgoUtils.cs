@@ -184,13 +184,14 @@ public class AlgoUtils
 
     private int GreatestCommonDivisor(long a, int b)
     {
+        
         while (b != 0)
         {
             int temp = b;
             b = (int)(a % b);
             a = temp;
         }
-
+        
         return (int)a;
     }
 
