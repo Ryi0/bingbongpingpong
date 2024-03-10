@@ -4,7 +4,7 @@ public class AlgoUtils
 {
     public static string[] MyStrings = Array.Empty<string>();
 
-    public string Randomized(string input, long randomizer, char randChar)
+    public string Randomized(string input, int randomizer, char randChar)
     {
         string message = "";
         var lenght = input.Length;
@@ -24,7 +24,7 @@ public class AlgoUtils
         return message;
     }
 
-    public char CryptedChar(char inChar, long randomizer)
+    public char CryptedChar(char inChar, int randomizer)
     {
         var aran = randomizer % 256;
         // Console.WriteLine(aran);
@@ -36,7 +36,7 @@ public class AlgoUtils
         return randomChar;
     }
 
-    public char DecryptedChar(char randomChar, long randomizer)
+    public char DecryptedChar(char randomChar, int randomizer)
     {
         int aran = Convert.ToInt32(randomChar);
         int inverseMultiplier = ModInverse(randomizer, 256);
@@ -45,7 +45,7 @@ public class AlgoUtils
         return Convert.ToChar(aran);
     }
 
-    public int ModInverse(long a, int m)
+    public int ModInverse(int a, int m)
     {
         a = a % m;
         for (int x = 1; x < m; x++)
@@ -57,11 +57,11 @@ public class AlgoUtils
         return 1;
     }
 
-    public long GreatestCommonDivisor(long a, long b)
+    public int GreatestCommonDivisor(int a, int b)
     {
         while (b != 0)
         {
-            long temp = b;
+            int temp = b;
             b = a % b;
             a = temp;
         }
@@ -69,7 +69,7 @@ public class AlgoUtils
         return a;
     }
 
-    public long FindRelativePrimeTo256(long number)
+    public int FindRelativePrimeTo256(int number)
     {
         while (GreatestCommonDivisor(number, 256) != 1)
         {
@@ -80,8 +80,8 @@ public class AlgoUtils
     }
 
 //after this, find an algo that can obfuscate the randomizer and add that layer of obfuscation
-//This will permit me to separate my strings with longer strings of text. Only the correct initial letters are to be parsed using the right randomizer. every 5 letters, use the randomizer. if i%5!=0, randomizer+i for the decryptions
-    public string CryptWord(string inputWord, long randomizer)
+//This will permit me to separate my strings with inter strings of text. Only the correct initial letters are to be parsed using the right randomizer. every 5 letters, use the randomizer. if i%5!=0, randomizer+i for the decryptions
+    public string CryptWord(string inputWord, int randomizer)
     {
         if (inputWord==null)
         {
@@ -103,7 +103,7 @@ public class AlgoUtils
         return tmp;
     }
     
-    public string DeCryptWord(string inputWord, long randomizer)
+    public string DeCryptWord(string inputWord, int randomizer)
     {
         if (inputWord==null)
         {
@@ -125,5 +125,106 @@ public class AlgoUtils
         }
         
         return tmp;
+    }
+
+    public string DeCryptWord(string inputWord, long randomizer)
+    {
+        if (inputWord==null)
+        {
+            throw new Exception("Steph Charray will be null");
+        }
+        string tmp = inputWord;
+        List<char> stephChArray = new List<char>();
+
+        for (int i = 0; i < tmp.Length; i++)
+        {
+            stephChArray.Add(tmp[i]);
+        }
+
+        tmp = "";
+        for (int i = 0; i < stephChArray.Count; i++)
+        {
+            // Console.WriteLine(this.DecryptedChar(stephChArray[i], randomizer));
+            tmp += this.DecryptedChar(stephChArray[i], randomizer);
+        }
+        
+        return tmp;
+    }
+
+    private string DecryptedChar(char randomChar, long randomizer)
+    {
+        int aran = Convert.ToInt32(randomChar);
+        int inverseMultiplier = ModInverse(randomizer, 256);
+        aran *= inverseMultiplier;
+        aran = aran % 256;
+        return Convert.ToChar(aran).ToString();
+    }
+
+    private int ModInverse(long a, int m)
+    {
+        a = a % m;
+        for (int x = 1; x < m; x++)
+        {
+            if ((a * x) % m == 1)
+                return x;
+        }
+
+        return 1;
+    }
+
+    public long FindRelativePrimeTo256(long number)
+    {
+        while (GreatestCommonDivisor(number, 256) != 1)
+        {
+            number--;
+        }
+
+        return number;
+    }
+
+    private int GreatestCommonDivisor(long a, int b)
+    {
+        while (b != 0)
+        {
+            int temp = b;
+            b = (int)(a % b);
+            a = temp;
+        }
+
+        return (int)a;
+    }
+
+    public string CryptWord(string inputWord, long randomizer)
+    {
+        if (inputWord==null)
+        {
+            throw new Exception("Steph Charray will be null");
+        }
+        string tmp = inputWord;
+        char[] stephChArray = new char[tmp.Length];
+
+        for (int i = 0; i < tmp.Length; i++)
+        {
+            stephChArray[i] = this.CryptedChar(tmp[i], randomizer);
+        }
+
+        tmp = "";
+        for (int i = 0; i < stephChArray.Length; i++)
+        {
+            tmp += stephChArray[i];
+        }
+        return tmp;
+    }
+
+    private char CryptedChar(char inChar, long randomizer)
+    {
+        var aran = randomizer % 256;
+        // Console.WriteLine(aran);
+        aran *= inChar;
+        aran = aran % 256;
+        // Console.WriteLine(aran);
+        char randomChar = Convert.ToChar(aran);
+        // Console.WriteLine(randomChar);
+        return randomChar;
     }
 } 
