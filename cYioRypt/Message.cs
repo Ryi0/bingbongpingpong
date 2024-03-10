@@ -28,6 +28,10 @@ public class Message : IMessage
     /// <param name="words"></param>
     public Message(int seed, int obfuscatorSettings, int steps, params string[] words)
     {
+        if (seed>444444)
+        {
+            throw new ArgumentOutOfRangeException(nameof(seed),"seed must be lower than 444444");
+        }
         InputMessage = "";
         this.Seed = seed;
 
